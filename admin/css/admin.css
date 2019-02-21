@@ -1,0 +1,40 @@
+body{
+    padding-top:100px;
+    
+}
+.huge{
+    font-size:40;
+}
+.tag-boxes .panel-primary{
+    border: 2px solid;
+    padding-left: 20px;
+    
+}
+.tag-boxes .panel-green{
+    border: 2px solid;
+    padding-left: 20px;
+   background-color: green;
+}
+
+
+.tag-boxes .panel-yellow{
+    border: 2px solid;
+    padding-left: 20px;
+   
+    
+}
+.tag-boxes .panel-red{
+    border: 2px solid;
+    padding-left: 20px;
+   
+}
+
+footer{
+    width:100%;
+    background: black;
+    line-height: 50px;
+    color: white;
+    letter-spacing: 2px;
+    text-align: center;
+
+}

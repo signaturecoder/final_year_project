@@ -1,0 +1,334 @@
+body{
+    font-family: 'Oswald', sans-serif;
+    background: #EEEDED;
+}
+
+.card {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.navbar {
+    height: 50px !important;
+    padding-top: 5px;
+}
+
+.navbar-brand img{
+    margin-top: -5px;
+    margin-right: 5px;
+}
+
+a{
+    color: blue;
+}
+
+a:hover{
+    color:blue;
+}
+.jumbotron{
+    height: 200px;
+    overflow: hidden;
+   
+}
+
+.jumbotron #details{
+    position: absolute;
+    color:white;
+}
+
+.jumbotron img{
+    
+    width: 100%;
+}
+
+section .widgets{
+    margin-bottom:20px;
+    width: auto;
+}
+
+.popular{
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #E3E3E3;
+}
+
+.popular img{
+    margin-left: 15px;
+    width: 80px;
+}
+
+.popular .details{
+    margin-left: 20px;
+    text-align: right;
+}
+
+.popular .details p{
+    font-family: arial;
+    font-size: 11px;
+}
+
+.popular ul li{
+    list-style: none;
+}
+
+.categories{
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #E3E3E3;
+}
+
+
+.jumbotron #details span{
+    color: #DB0100;
+    
+}
+
+.post{
+    background: white;
+    border: 1px solid #E3E3E3;
+    margin: 15px 0px;
+}
+
+.post .post-date{
+    padding: 15px;
+    text-align: center;
+    
+}
+
+.post .post-date .day{
+    color: blue;
+    font-size: 30px;
+}
+
+.post .post-date .year{
+    font-weight: 100;
+}
+
+.post .post-title{
+    padding: 20px;
+    border-left:1px solid #E3E3E3;
+}
+
+.post .post-title span{
+    color: blue;
+    font-weight: 100;
+    margin-left: 5px;
+}
+
+.post .profile-picture{
+    padding: 20px;
+}
+
+.post .profile-picture img{
+    width: 80px;
+}
+
+.post > a > img{
+    width: 100%;
+}
+
+.post .desc{
+    font-family: arial;
+    font-weight: 100;
+    padding: 10px;
+    line-height: 20px;
+}
+
+.post > a.btn{
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.post .bottom{
+    padding: 10px 10px;
+    border-top:1px solid #E3E3E3; 
+}
+
+.post .bottom{
+    color: #E3E3E3;
+}
+
+.post .bottom .first{
+    margin-right: 20px;
+}
+
+.post .bottom .sec{
+    margin-left: 20px;
+}
+
+.widgets .popular .img-thumbnail{
+        width: 50px;
+        margin-left: 15px;
+    }
+
+nav{
+    text-align: center;
+}
+
+.pagination >li >a{
+    color: blue;
+    padding: 15px 20px;
+}
+
+footer{
+    width:100%;
+    background: black;
+    line-height: 50px;
+    color: white;
+    letter-spacing: 2px;
+    text-align: center;
+
+}
+
+.contact-form textarea{
+     resize: none;
+    
+}
+
+.contact-form h2{
+  color: #DB4437;
+    
+}
+
+.related-posts h2{
+     color: #DB4437;
+    margin-top: 10px;
+}
+
+.related-posts img{
+    width: 100%;
+}
+
+.author img{
+    width: 100%;
+}
+
+.author h4{
+    margin-top: 10px;
+    text-decoration: underline;
+    color: #DB4437;
+}
+
+.author p{
+       font-weight: 100;
+}
+
+
+.comment-box textarea{
+     resize: none;
+    
+}
+
+.comment-box h2{
+  color: #DB4437;
+    
+}
+
+@media (max-width:990px){
+
+     .post .profile-picture{
+         text-align: center;
+    }
+    
+    .post .post-title{
+        text-align: center;
+        border: none;
+    }
+    
+}
+
+.comment{
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.comment h4,h3{
+    color: #DB4437;
+}
+
+.comment img{
+    width: 100%;
+}
+
+.comment p{
+   font-weight: 100;
+}
+
+@media (max-width:786px){
+   
+    .jumbotron #details{
+        margin-top: 20px;
+    }
+    
+    .post .post-title{
+        margin-top: -30px;
+        text-align: center;
+    }
+    
+     
+    .post .profile-picture{
+        text-align: center;
+    }
+    
+    .post .profile-picture img{
+        width: 25%;
+    }
+    
+    footer{
+        font-size: 8px;
+    }
+    
+    .jumbotron{
+    height: 100px;
+    overflow: hidden;
+    }
+    
+    .author{
+        background: white;
+        padding: 20px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    
+    .author img{
+    width: 30%;
+    }
+    
+    .author h4{
+    margin-top: 10px;
+    text-decoration: underline;
+    color: #DB4437;
+    }
+    
+    .comment{
+        background: white;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .comment h3{
+         color: #DB4437;
+    }
+    
+    .comment h4{
+        color: #DB4437;
+        text-align: center;
+    }
+
+    .comment img{
+        width: 50%;
+        
+    }
+
+    .comment p{
+       font-weight: 100;
+        text-align: center;
+    }
+    
+    .comment .single-comment{
+        text-align: center;
+    }
+    
+}
