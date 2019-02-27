@@ -1,8 +1,35 @@
-   <!doctype html>
-   <html lang="en">
-    <?php require('includes/header.php')?>
-   <body>
-    <?php include 'includes/navbar.php'?>
+<!doctype html>
+<html lang="en">
+<?php include 'includes/header.php';?>
+<body>
+<?php include 'includes/navbar.php';
+    
+    $number_of_posts = 2;
+    
+    if(isset($_GET['page'])){
+        $page_id = $_GET['page'];
+    }
+    else{
+        $page_id = 1;
+    }
+    
+    if(isset($_GET['cat'])){
+        $cat_id = $_GET['cat'];
+        $cat_query = "SELECT * FROM categories where id = $cat_id";
+        $cat_run = mysqli_query($con,$cat_query);
+        $cat_row = mysqli_num_rows($cat_run);
+        $cat_name = $cat_row['category'];
+    }
+    
+    
+    $all_posts_query = "SELECT * FROM posts WHERE status = 'publish'";
+    $all_posts_run = mysqli_query($con,$all_posts_query);
+    $all_posts = mysqli_num_rows($all_posts_run);
+    $total_pages = ceil($all_posts / $number_of_posts); // ceil is used to convert fraction in whole number
+    $posts_start_from = ($page_id - 1) * $number_of_posts;
+    
+    
+?>
               
         <!--        Description Bar-->
                <div class="jumbotron">
@@ -12,145 +39,94 @@
                            <p>This is a simple paragraph. </p>
                        </div>
                        <img src="img/banner9.jpg" alt="top-image">
-                      </div>
-                       
+                      </div>   
                </div>
                
     <!--   Section Started            -->
     <section>
         <div class="container">
             <div class="row">
-               
-                <!--      corosol started-->
                 <div class="col-md-8">
-                    
-                   <div class="bd-example">
-                      <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                          <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                          <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                          <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                          <div class="carousel-item active">
-                            <img src="img/banner2.jpg" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                              <h5>First slide label</h5>
-                              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                            </div>
-                          </div>
-                          <div class="carousel-item">
-                            <img src="img/banner3.jpg" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                              <h5>Second slide label</h5>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                          </div>
-                          <div class="carousel-item">
-                            <img src="img/banner4.jpg" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                              <h5>Third slide label</h5>
-                              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                            </div>
-                          </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div> 
-                    <!--   corosol ended-->
+                
+                <!--   Corosol Started-->
+                  <?php require_once('includes/corosol.php');?>
+                <!--   corosol ended-->
                     
                     <!--    Main Posts  -->
-                    <div class="post">
-                        <div class="row">
-                            <div class="col-md-2 post-date">
-                                <div class="day">15</div>
-                                <div class="month">Feburary</div>
-                                <div class="year">2019</div>
+                    <?php
+                    $query = "SELECT * FROM posts WHERE status = 'publish'";
+                    if(isset($cat_name)){
+                        $query .=" and category = '$cat_name'";
+                    }
+                    $query .="ORDER BY id DESC LIMIT $posts_start_from,$number_of_posts";
+                    $run = mysqli_query($con,$query);
+                    if(mysqli_num_rows($run) > 0)
+                       {
+                        while($row = mysqli_fetch_array($run))
+                        {
+                            //  Do not need to write in proper order similar to database
+                            // these are the php variables = php array['database column_name']
+                            $id = $row['id'];
+                            $date = getdate($row['date']); //getdate is a funtion
+                            $day = $date['mday'];
+                            $month = $date['month'];
+                            $year = $date['year'];
+                            $title = $row['title'];
+                            $author = $row['author'];
+                            $author_image = $row['author_image'];
+                            $image = $row['image'];
+                            $category = $row['category'];
+                            $tags = $row['tags'];
+                            $post_data = $row['post_data'];
+                            $view = $row['view'];
+                            $status = $row['status'];
+                            //  close the php tag here    
+                            ?>  
+                          <!-- html post description -->
+                          <div class="post">
+                            <div class="row">
+                                <div class="col-md-2 post-date">
+                                    <!--  replace static value with dynamic value using php tag-->
+                                    <div class="day"><?php echo $day;?></div>
+                                    <div class="month"><?php echo $month;?></div>
+                                    <div class="year"><?php echo $year;?></div>
+                                </div>
+                                <div class="col-md-8 post-title">
+                                    <a href="post.php?post_id=<?php echo $id;?> "><h2><?php echo $title;?></h2></a>
+                                    <p>Written by :<span><?php echo ucfirst($author);?></span></p>
+                                </div>
+                                <div class="col-md-2 profile-picture">
+                                    <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="rounded-circle">
+                                </div>
                             </div>
-                            <div class="col-md-8 post-title">
-                                <a href="#"><h2>This is demo heading for post one...</h2></a>
-                                <p>Written by :<span>Sanu Kumar</span></p>
+                            <a href="post.php?post_id=<?php echo $id;?> "><img src="img/<?php echo $image;?>" alt="post-image"></a>
+                            <p class="desc"><?php echo substr($post_data,0,100)."....";?></p>
+                            <a href="post.php?post_id=<?php echo $id;?> " class="btn btn-primary">Read More...</a>
+                            <div class="bottom">
+                                <span class="first"><i class="fas fa-folder"></i><a href="#"> <?php echo ucfirst($category);?></a></span>|<span class="sec"><i class="fas fa-comment"></i><a href="#"> Comment</a></span>
                             </div>
-                            <div class="col-md-2 profile-picture">
-                                <img src="img/profilePic.jpg" alt="Profile Picture" class="rounded-circle">
-                            </div>
-                        </div>
-                        <a href=""><img src="img/banner.jpg" alt="post-image"></a>
-                        <p class="desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?</p>
-                        <a href="#" class="btn btn-primary">Read More...</a>
-                        <div class="bottom">
-                            <span class="first"><i class="fas fa-folder"></i><a href="#"> Category</a></span>|<span class="sec"><i class="fas fa-comment"></i><a href="#"> Comment</a></span>
-                        </div>
-                     </div>
-                     
-                     <div class="post">
-                        <div class="row">
-                            <div class="col-md-2 post-date">
-                                <div class="day">15</div>
-                                <div class="month">Feburary</div>
-                                <div class="year">2019</div>
-                            </div>
-                            <div class="col-md-8 post-title">
-                                <a href="#"><h2>This is demo heading for post one...</h2></a>
-                                <p>Written by :<span>Sanu Kumar</span></p>
-                            </div>
-                            <div class="col-md-2 profile-picture">
-                                <img src="img/profilePic.jpg" alt="Profile Picture" class="rounded-circle">
-                            </div>
-                        </div>
-                        <a href=""><img src="img/banner.jpg" alt="post-image"></a>
-                        <p class="desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?</p>
-                        <a href="#" class="btn btn-primary">Read More...</a>
-                        <div class="bottom">
-                            <span class="first"><i class="fas fa-folder"></i><a href="#"> Category</a></span>|<span class="sec"><i class="fas fa-comment"></i><a href="#"> Comment</a></span>
-                        </div>
-                     </div>
-                     
-                     <div class="post">
-                        <div class="row">
-                            <div class="col-md-2 post-date">
-                                <div class="day">15</div>
-                                <div class="month">Feburary</div>
-                                <div class="year">2019</div>
-                            </div>
-                            <div class="col-md-8 post-title">
-                                <a href="#"><h2>This is demo heading for post one..</h2></a>
-                                <p>Written by :<span>Sanu Kumar</span></p>
-                            </div>
-                            <div class="col-md-2 profile-picture">
-                                <img src="img/profilePic.jpg" alt="Profile Picture" class="rounded-circle">
-                            </div>
-                        </div>
-                        <a href=""><img src="img/banner.jpg" alt="post-image"></a>
-                        <p class="desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?</p>
-                        <a href="#" class="btn btn-primary">Read More...</a>
-                        <div class="bottom">
-                            <span class="first"><i class="fas fa-folder"></i><a href="#"> Category</a></span>|<span class="sec"><i class="fas fa-comment"></i><a href="#"> Comment</a></span>
-                        </div>
-                     </div>
-                     
+                         </div>
+                         
+                        <!--   again open the php tag to complete the while loop and if condition -->
+                        <?php
+                            
+                            }
+                        }
+                        else
+                        {
+                            echo "<center><h2>No Posts Available</h2></center>";
+                        }
+                        ?>
+                        <!--    Post ended here-->
+                    
+
                      <nav>
-                      <ul class="pagination">
-                        <li class="page-item">
-                          <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                          </a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                          <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                          </a>
-                        </li>
+                      <ul class="pagination justify-content-center pagination-sm">
+                       <?php 
+                        for($i = 1; $i <= $total_pages; $i++){
+                             echo "<li class='".($page_id == $i ? 'active':'')." page-item'><a class='page-link' href='index.php?page=".$i."&".(isset($cat_name) ? "cat=$cat_id":" ")."'>$i</a></li>";
+                        }  
+                        ?>
                       </ul>
                     </nav>
                 </div>
@@ -167,34 +143,31 @@
      <!-- Footer -->
         <?php include 'includes/footer.php';?>
      <!-- Footer -->
-    
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-   <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js" integrity="sha384-7aThvCh9TypR7fIc2HV4O/nFMVCBwyIUKL8XCtKE+8xgCgl/PQGuFsvShjr74PBp" crossorigin="anonymous"></script> -->
-       
-<script type="text/javascript">
-  function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
+        
+        <!--  Optional Script-->
+        <?php include 'includes/script.php';?> 
+        
+        <script type="text/javascript">
+          function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
 
 
-      if(profile){
-          $.ajax({
-                type: 'POST',
-                url: 'login_pro.php',
-                data: {id:profile.getId(), name:profile.getName(), email:profile.getEmail()}
-            }).done(function(data){
-                console.log(data);
-                window.location.href = 'home.php';
-            }).fail(function() { 
-                alert( "Posting failed." );
-            });
-      }
+              if(profile){
+                  $.ajax({
+                        type: 'POST',
+                        url: 'login_pro.php',
+                        data: {id:profile.getId(), name:profile.getName(), email:profile.getEmail()}
+                    }).done(function(data){
+                        console.log(data);
+                        window.location.href = 'index.php';
+                    }).fail(function() { 
+                        alert( "Posting failed." );
+                    });
+              }
 
 
-    }
-</script>
+            }
+        </script>
+        
 </body>
 </html>
