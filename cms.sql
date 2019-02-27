@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2019 at 02:01 PM
+-- Generation Time: Feb 27, 2019 at 07:30 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.11
 
@@ -40,8 +40,8 @@ CREATE TABLE `categories` (
 INSERT INTO `categories` (`id`, `category`) VALUES
 (3, 'Mobiles'),
 (4, 'Laptops'),
-(5, 'Mobiles'),
-(6, 'Laptops');
+(7, 'Video tutorials'),
+(8, 'Desktop');
 
 -- --------------------------------------------------------
 
@@ -63,6 +63,16 @@ CREATE TABLE `posts` (
   `status` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `date`, `title`, `author`, `author_image`, `image`, `category`, `tags`, `post_data`, `view`, `status`) VALUES
+(1, 1457895484, 'How to remove folder from windows', 'Sanu kumar', 'profilePic.jpg', 'banner8.png', 'Video tutorials', ' hindi tutorials, videos, online tutorials', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?', 45, 'publish'),
+(2, 1345679890, 'How to rename google website in hindi', 'Ramesh', 'unknown.png', 'banner7.jpg', 'books', 'tutorial, poetry book', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?', 44, 'publish'),
+(3, 1457892201, 'How to talk with your teacher', 'Shaunak', 'technoLogo2.png', 'facebookIcon.png', 'books', 'tutorial, guitar', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?', 42, 'publish'),
+(4, 1457892201, 'How to talk with your teacher', 'Sanchita', 'technoLogo2.png', 'facebookIcon.png', 'books', 'tutorial, guitar', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?\r\nLorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?', 200, 'publish');
+
 -- --------------------------------------------------------
 
 --
@@ -79,6 +89,13 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `google_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `google_id`) VALUES
+(1, 'sanu kumar', 'snkmr13@gmail.com', NULL, NULL, NULL, NULL, '106367391318338751350');
 
 --
 -- Indexes for dumped tables
@@ -110,19 +127,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
