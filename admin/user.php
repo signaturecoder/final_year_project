@@ -1,71 +1,59 @@
+<?php require_once('../includes/db.php');?>
+<?php 
+if(isset($_GET['del'])){
+    $del_id = $_GET['del'];
+    $del_query = "DELETE FROM `users_details` WHERE `users_details`.`id` = $del_id";
+    if(mysqli_query($con, $del_query)){
+        $msg = "User Has been Delete";
+    }
+    else{
+        $error = "User has not been deleted";
+    }
+    
+}
+if(isset($_POST['checkboxes'])){
+    foreach($_POST['checkboxes'] as $user_id){
+        
+      $bulk_option = $_POST['bulk-options'];
+        
+        if($bulk_option == 'delete'){
+            $bulk_del_query = "DELETE FROM `users_details` WHERE `users_details`.`id` = $user_id";
+            mysqli_query($con, $bulk_del_query);
+            
+        }
+        else if($bulk_option == 'author'){
+             $bulk_author_query = "UPDATE `users_details` SET `role` = 'author ' WHERE `users_details`.`id` = $user_id";
+             mysqli_query($con, $bulk_author_query);
+             
+            
+        }
+        
+         else if($bulk_option == 'admin'){
+             $bulk_admin_query = "UPDATE `users_details` SET `role` = 'admin' WHERE `users_details`.`id` = $user_id";
+             mysqli_query($con, $bulk_admin_query);
+             
+         }
+    }
+    
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!--   Meta Tags-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/admin.css">
-    
-    <title>Admin Page</title>
-   
-</head>
+<?php require_once('includes/header.php');?>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top ">
-      <a class="navbar-brand" href="#">CMS</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-plus-square"></i>  Add Post</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Add User</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-user"></i> Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-power-off"></i> Log Out</a>
-          </li>
- 
-        </ul>
-        
-      </div>
-    </nav>
+    <!--   Navigation Bar Started-->
+    <?php require_once('includes/navbar.php');?>
+    <!--    Navigation bar ended-->
+    
     <div class="cointainer-fluid">
         <div class="row">
-        <!--       Dashboard Left Menu -->
-        
-           <div class="col-md-3">           
-            <ul class="list-group">
-             <a href="#" class="list-group-item active">Dashboard</a>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                All Posts
-                <span class="badge badge-primary badge-pill">14</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Comments
-                <span class="badge badge-primary badge-pill">2</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Categories
-                <span class="badge badge-primary badge-pill">11</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                User
-                <span class="badge badge-primary badge-pill">14</span>
-              </li>
-            </ul>
 
+            <!--       Dashboard Left Menu Started -->
+           <div class="col-md-3">           
+            <?php require_once('includes/sidebar.php');?>
             </div>
-            
+            <!--       Dashboard Left Menu Ended -->
+           
             <div class="col-md-9">
                 <h1><i class="fas fa-user"></i>User<small>View all User</small></h1><hr>
                 <nav aria-label="breadcrumb">
@@ -73,13 +61,20 @@
                     <li><a href="#"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                     <li class="active"><i class="fa fa-users ml-2"></i>Users</li>
                 </ol>
+                      <?php 
+                           $query = "SELECT * FROM users_details ORDER BY id DESC";
+                           $run = mysqli_query($con, $query);
+                           if(mysqli_num_rows($run) > 0){      
+                         ?>
+                         
+                       <form action="" method="post">
                         <div class="row">
                             <div class="col-sm-8">
-                                <form action="">
+                                
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <div class="form-group">
-                                                <select name="" id="" class="form-control">
+                                                <select name="bulk-options" id="selectallboxes" class="form-control">
                                                     <option value="delete">Delete</option>
                                                     <option value="author">Change To Author</option>
                                                     <option value="admin">Change To Admin</option>
@@ -88,17 +83,25 @@
                                         </div>
                                         <div class="col-xs-8 ml-2">
                                             <input type="submit" class="btn btn-success" value="Apply">
-                                            <a href="#" class="btn btn-primary">Add New</a>
+                                            <a href="add-user.php" class="btn btn-primary">Add New</a>
                                         </div>
-                                    </div>
-                                </form>
+                                 </div>
                             </div>
                         </div>
+                        <?php 
+                           if(isset($error)){
+                                   echo "<span style='color:red;' class='pull-right'>$error</span>";
+                                   
+                               }
+                               else if(isset($msg)){
+                                    echo "<span style='color:green;' class='pull-right'>$msg</span>";
+                               }
+                         ?>
                         
                         <table class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
-                                   <th><input type="checkbox"></th>
+                                   <th><input type="" class="checkboxes" id="selectallboxes"></th>
                                     <th>Sr #</th>
                                     <th>Date</th>
                                     <th>Name</th>
@@ -107,142 +110,60 @@
                                     <th>Image</th>
                                     <th>Password</th>
                                     <th>Role</th>
-                                    <th>Post</th>
+                                    
                                     <th>Edit</th>
                                     <th>Del</th>
                                 </tr>
                             </thead>
-                            
                             <tbody>
+                             <?php 
+                               while($row = mysqli_fetch_array($run)){
+                                   $id = $row['id'];
+                                   $first_name = ucfirst($row['first_name']);
+                                   $last_name = ucfirst($row['last_name']);
+                                   $email = $row['email'];
+                                   $username = $row['username'];
+                                   $role = $row['role'];
+                                   $image = $row['image'];
+                                   $date = getdate($row['date']);
+                                   $day = $date['mday'];
+                                   $month = substr ($date['month'],0,3);
+                                   $year = $date['year'];
+                                ?>
                                 <tr>
-                                  <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
+                                    <td><input type="checkbox" class="checkboxes" name="checkboxes[]" value="<?php echo $id;?>"></td>
+                                    <td><?php echo $id;?></td>
+                                    <td><?php echo "$day $month $year";?></td>
+                                    <td><?php echo "$first_name $last_name";?></td>
+                                    <td><?php echo $username;?></td>
+                                    <td><?php echo $email;?></td>
+                                    <td><img src="img/<?php echo $image;?>"> 
+                                    </td>
+                                    <td>************</td>
+                                    <td><?php echo ucfirst($role);?></td>         
+                                    <td><a href="edit-user.php?edit=<?php echo $id;?>">
+                                    <i class="fas fa-pencil-alt"></i></a></td>
+                                    <td><a href="user.php?del=<?php echo $id;?>"><i class="fa fa-times"></i></a></td>
                                 </tr>
-                                   
-                                   <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-        
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>1</td>
-                                    <td>21 feb 2019</td>
-                                    <td>sanchita</td>
-                                    <td>sanchita1234</td>
-                                    <td>sanc1234gmail.com</td>
-                                    <td><img src="" alt=""></td>
-                                    <td>1234rewq</td>
-                                    <td>admin</td>
-                                    <td>11</td>
-                                    <td><a href="#"><i class="fas fa-pencil-alt"></i></a></td>
-                                    <td><a href="#"><i class="fa fa-times"></i></a></td>
-                                </tr>
-                                
+                                <?php }?> 
+                               
                             </tbody>
                         </table>
-                
+                        <?php 
+                    }
+                            
+                           else{
+                               echo "<center><h2>NO USER AVAILABLE NOW</h2></center>";
+                           }
+                    ?>
+                    </form>
                 </nav>
-                
             </div>
         </div>
     </div>
+              <!-- Footer -->
+                <?php include 'includes/footer.php';?>
+             <!-- Footer -->
      
 </body>
 </html>
