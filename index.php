@@ -1,8 +1,11 @@
-<!doctype html>
-<html lang="en">
-<?php include 'includes/header.php';?>
+<?php include 'includes/header.php';
+?>
+</head>
 <body>
-<?php include 'includes/navbar.php';
+
+<?php
+    
+    include 'includes/navbar.php';
     
     $number_of_posts = 2;
     
@@ -21,31 +24,69 @@
         $cat_name = $cat_row['category'];
     }
     
+    if(isset($_POST['search'])){
+         $search = $_POST['search-title'];
+         $all_posts_query = "SELECT * FROM posts WHERE status = 'publish'";
+         $all_posts_query .=" and tags LIKE '%$search%'";
+         $all_posts_run = mysqli_query($con,$all_posts_query);
+         $all_posts = mysqli_num_rows($all_posts_run);
+         $total_pages = ceil($all_posts / $number_of_posts); // ceil is used to convert fraction in whole number
+         $posts_start_from = ($page_id - 1) * $number_of_posts;
+
+    }
     
-    $all_posts_query = "SELECT * FROM posts WHERE status = 'publish'";
-    $all_posts_run = mysqli_query($con,$all_posts_query);
-    $all_posts = mysqli_num_rows($all_posts_run);
-    $total_pages = ceil($all_posts / $number_of_posts); // ceil is used to convert fraction in whole number
-    $posts_start_from = ($page_id - 1) * $number_of_posts;
+    else{   
+         $all_posts_query = "SELECT * FROM posts WHERE status = 'publish'";
+         if(isset($cat_name)){
+            $all_posts_query .=" and category = '$cat_name'";
+         }        
+         $all_posts_run = mysqli_query($con,$all_posts_query);
+         $all_posts = mysqli_num_rows($all_posts_run);
+         $total_pages = ceil($all_posts / $number_of_posts); // ceil is used to convert fraction in whole number
+         $posts_start_from = ($page_id - 1) * $number_of_posts;
+    }
+    
     
     
 ?>
-              
-        <!--        Description Bar-->
-               <div class="jumbotron">
+    
+    <div class="tophead">
+      
+         <p class="userdetails ml-2">Welcome <?php
+                      if(isset($_SESSION['email']))
+                          echo $_SESSION['email'];?></p>
+    </div>
+    
+
+
+               <!-- <div class="jumbotron">
                       <div class="container">
                           <div id="details" class="animated fadeInLeft">
                            <h1>CMS<span>blog</span></h1>
                            <p>This is a simple paragraph. </p>
                        </div>
-                       <img src="img/banner9.jpg" alt="top-image">
+                       <img src="img/technoIndiaBuilding2.jpg" alt="top-image">
                       </div>   
-               </div>
+               </div> -->
+          
+
+
+             
+             <div class="sidebar">
+              <ul>
+                <li><a class="" href="#">home</a></li>
+                <li><a class="" href="#">contact</a></li>
+                <li><a class="" href="#">thank you</a></li>
+              </ul>
+            </div> 
+               
+               
                
     <!--   Section Started            -->
     <section>
         <div class="container">
             <div class="row">
+
                 <div class="col-md-8">
                 
                 <!--   Corosol Started-->
@@ -54,11 +95,24 @@
                     
                     <!--    Main Posts  -->
                     <?php
-                    $query = "SELECT * FROM posts WHERE status = 'publish'";
-                    if(isset($cat_name)){
-                        $query .=" and category = '$cat_name'";
+                    
+                    //  Search tab php code if search found = true otherwise false condition started
+                    if(isset($_POST['search'])){
+                            $search = $_POST['search-title'];
+                            $query = "SELECT * FROM posts WHERE status = 'publish'";
+                            $query .= " and tags  LIKE '%$search%'";  
+                            $query .="ORDER BY id DESC LIMIT $posts_start_from,$number_of_posts";
                     }
-                    $query .="ORDER BY id DESC LIMIT $posts_start_from,$number_of_posts";
+                    else{
+                            $query = "SELECT * FROM posts WHERE status = 'publish'";
+                            if(isset($cat_name)){
+                                $query .=" and category = '$cat_name'";   
+                            }
+                            $query .=" ORDER BY id DESC LIMIT $posts_start_from, $number_of_posts";
+                    }
+                    
+                    //  Search tab php code if search found = true otherwise false condition ended 
+                    
                     $run = mysqli_query($con,$query);
                     if(mysqli_num_rows($run) > 0)
                        {
@@ -133,41 +187,13 @@
                 <!-- Side Posts        -->
                 <div class="col-md-4">
                  <!--       SidePost Bar-->
-                 <?php include 'includes/sidebar.php';?>
+                <?php include 'includes/sidebar.php';?>
                  <!--       SidePost Bar-->
                 </div>
                 </div>
             </div>
     </section>
     
-     <!-- Footer -->
+          <!-- Footer -->
         <?php include 'includes/footer.php';?>
      <!-- Footer -->
-        
-        <!--  Optional Script-->
-        <?php include 'includes/script.php';?> 
-        
-        <script type="text/javascript">
-          function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-
-
-              if(profile){
-                  $.ajax({
-                        type: 'POST',
-                        url: 'login_pro.php',
-                        data: {id:profile.getId(), name:profile.getName(), email:profile.getEmail()}
-                    }).done(function(data){
-                        console.log(data);
-                        window.location.href = 'index.php';
-                    }).fail(function() { 
-                        alert( "Posting failed." );
-                    });
-              }
-
-
-            }
-        </script>
-        
-</body>
-</html>

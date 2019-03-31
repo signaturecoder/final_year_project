@@ -1,21 +1,95 @@
-body{
+
+body,html{
     font-family: 'Oswald', sans-serif;
-    background: #EEEDED;
+    background: #f8f9fa;
 }
 
 .card {
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  margin-top: 100px;
 }
 
-.navbar {
-    height: 50px !important;
-    padding-top: 5px;
+/*navbar */
+nav{
+    height: 60px;
+}
+
+/*tophead*/
+.tophead{
+    margin-top: 80px;
+	background-color:#DB0100;
+	color: white;
+}
+
+/*sidemenu buttonspecial*/
+.btnspl{
+	float: left;
+	padding: 0 10px;
+	font-size: 40px;
+	text-decoration: none;
+	color: #2c3e50;
+	font-family: Ionicons;
+	cursor:pointer;
+
+}
+
+.btnspl:before{
+	content: '\f32a';
+}
+
+.btnsplc:before{
+	content: '\f2c0';
+}
+
+/*sidemenu menu*/
+.sidebar{
+	float: left;
+	width: 150px;
+	height: 100%;
+    margin-left: -50px;
+	background:green;
+	overflow: hidden;
+	transition: 0.8s all;
+  
+}
+
+.side{
+	margin-left: 0;
+}
+
+.sidebar ul{
+	margin: 0;
+	padding: 0;
+}
+
+.sidebar ul li{
+	list-style: none;
+}
+
+.sidebar ul li a{
+	text-decoration: none;
+	color: black;
+	height: 30px;
+	width:100%;
+	font-size: 20px;
+	text-align: left;
+	display: block;
+	padding-left: 10px; 
+	padding-top: 10px;
+	transition: 0.6s all;
+
+}
+
+.sidebar ul li a:hover{
+	background:orange;
 }
 
 .navbar-brand img{
+    margin-left: 10px;
     margin-top: -5px;
     margin-right: 5px;
 }
+
 
 a{
     color: blue;
@@ -24,8 +98,9 @@ a{
 a:hover{
     color:blue;
 }
+
 .jumbotron{
-    height: 200px;
+    height: 150px;
     overflow: hidden;
    
 }
@@ -37,12 +112,14 @@ a:hover{
 
 .jumbotron img{
     
-    width: 100%;
+    width: 50%;
 }
+
 
 section .widgets{
     margin-bottom:20px;
     width: auto;
+   
 }
 
 .popular{
@@ -54,12 +131,12 @@ section .widgets{
 
 .popular img{
     margin-left: 15px;
-    width: 80px;
+    width: 60px;
 }
 
 .popular .details{
     margin-left: 20px;
-    text-align: right;
+    text-align: left;
 }
 
 .popular .details p{
@@ -162,22 +239,21 @@ section .widgets{
         margin-left: 15px;
     }
 
-nav{
-    text-align: center;
-}
 
 .pagination >li >a{
     color: blue;
     padding: 15px 20px;
+   
 }
 
-footer{
+.footer{
     width:100%;
     background: black;
     line-height: 50px;
     color: white;
     letter-spacing: 2px;
     text-align: center;
+    bottom:0;
 
 }
 
@@ -242,6 +318,7 @@ footer{
     background: white;
     padding: 20px;
     margin-bottom: 15px;
+
 }
 
 .comment h4,h3{
@@ -276,7 +353,7 @@ footer{
         width: 25%;
     }
     
-    footer{
+    .footer{
         font-size: 8px;
     }
     

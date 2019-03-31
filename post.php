@@ -1,9 +1,55 @@
-   <!doctype html>
-   <html lang="en">
-   <?php require('includes/header.php')?>
-   <body>
+<?php
+    ob_start();
+    include "includes/db.php";
+?>
+<?php require_once('includes/header.php');  
+?>
+</head>
+<body>
     <?php include 'includes/navbar.php'?>
-
+    
+    <!--    Post id-->
+       
+    <?php
+            $row=array();
+            $image='';
+            $id='';
+            $day = '';
+            $month = '';
+            $year = '';
+            $title ='';
+            $image = '';
+            $author_image = '';
+            $author = '';
+            $category = '';
+            $post_data = '';
+            $post_id='';
+    if(isset($_GET['post_id'])){
+        $post_id = $_GET['post_id'];
+        $query = "SELECT * FROM posts WHERE status = 'publish' and id = $post_id";
+        $run = mysqli_query($con,$query);
+        if(mysqli_num_rows($run) > 0){
+            
+            $row = mysqli_fetch_array($run);
+            $id = $row['id'];
+            $date = getdate($row['date']);
+            $day = $date['mday'];
+            $month = $date['month'];
+            $year = $date['year'];
+            $title = $row['title'];
+            $image = $row['image'];
+            $author_image = $row['author_image'];
+            $author = $row['author'];
+            $category = $row['category'];
+            $post_data = $row['post_data'];
+            
+        }
+        else{
+            header('Location:index.php');
+        }
+    }
+    ?>          
+               
                 <!--        Description Bar-->
                <div class="jumbotron">
                       <div class="container">
@@ -27,118 +73,161 @@
                              <div class="post">
                                     <div class="row">
                                         <div class="col-md-2 post-date">
-                                            <div class="day">15</div>
-                                            <div class="month">Feburary</div>
-                                            <div class="year">2019</div>
+                                            <div class="day"><?php echo $day;?></div>
+                                            <div class="month"><?php echo $month;?></div>
+                                            <div class="year"><?php echo $year;?></div>
                                         </div>
                                         <div class="col-md-8 post-title">
-                                            <a href="#"><h2>This is demo heading for post one...</h2></a>
-                                            <p>Written by :<span>Sanu Kumar</span></p>
+                                            <a href="post.php?post_id=<?php echo $id;?>"><h2><?php echo $title;?></h2></a>
+                                            <p>Written by :<span><?php echo ucfirst($author);?></span></p>
                                         </div>
                                         <div class="col-md-2 profile-picture">
-                                            <img src="img/profilePic.jpg" alt="Profile Picture" class="rounded-circle">
+                                            <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="rounded-circle">
                                         </div>
                                     </div>
-                                    <a href=""><img src="img/banner.jpg" alt="post-image"></a>
+                                    <a href="post.php?post_id=<?php echo $id;?>"><img src="img/<?php echo $image;?>" alt="post-image"></a>
                                     <p class="desc">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?<br><br>
-
-                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?<br><br>
-
-                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam deleniti at, sint neque accusantium laborum, cupiditate quis delectus. Vel quia reprehenderit repellendus quos doloribus esse ducimus corporis id tenetur itaque?<br><br>
+                                    <?php echo $post_data;?>
                                     </p>
 
                                     <div class="bottom">
-                                        <span class="first"><i class="fas fa-folder"></i><a href="#"> Category</a></span>|<span class="sec"><i class="fas fa-comment"></i><a href="#"> Comment</a></span>
+                                        <span class="first"><i class="fas fa-folder"></i><a href="#"><?php echo ucfirst($category);?></a></span>|<span class="sec"><i class="fas fa-comment"></i><a href="#"> Comment</a></span>
                                     </div>
                                  </div>
 
-                                <div class="related-posts mb-3 px-3 bg-white">
-                                <h2>Related Post</h2>
+                                <div class="related-posts mb-3 px-3 bg-white w-100">
+                                <h2>Related Post</h2><hr>
                                    <div class="row">
+
+                                  <!--    Repeat the belowe post that's why php is written here-->
+                                   <?php 
+                                    $r_query = "SELECT * FROM posts WHERE status = 'publish' and title LIKE '%$title%' LIMIT 3";
+                                    $r_run = mysqli_query($con,$r_query);
+                                       
+                                   while($r_row = mysqli_fetch_array($r_run)){
+                                                $r_id = $r_row['id'];           // r_id = related-id
+                                                $r_title = $r_row['title'];
+                                                $r_image = $r_row['image'];
+                                    
+                                    ?>
+
+                                   <!--The below section is repeated-->
                                     <div class="col-sm-4">
-                                        <a href="">
-                                            <img src="img/banner.jpg" alt="banner6">
-                                            <h4>This is the heading for post one. We can add some more here.</h4>
+                                        <a href="post.php?post_id=<?php echo $r_id;?>">
+                                            <img src="img/<?php echo $r_image;?>" alt="banner6">
+                                            <h4><?php echo $r_title;?></h4>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <a href="">
-                                            <img src="img/banner7.jpg" alt="banner7">
-                                            <h4>This is the heading for post one. We can add some more here.</h4>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="">
-                                            <img src="img/banner8.png" alt="banner8">
-                                            <h4>This is the heading for post one. We can add some more here.</h4>
-                                        </a>
-                                    </div>
+                                    <!--   While loop is closed after the repetion of posts ended-->
+
+                                    <?php 
+                                       }
+                                    ?>
+
+                                 
                                 </div>
                             </div>
 
                                 <div class="author bg-white mb-3">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <img src="img/profilePic.jpg " class="rounded-circle my-3 mx-3" alt="Profile Image">
+                                            <img src="img/<?php echo $author_image;?> " class="rounded-circle my-3 mx-3" alt="Profile Image">
                                         </div>
                                         <div class="col-md-9">
-                                            <h4>Sanu Kumar</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, omnis, ab? Non amet a temporibus similique alias iure, neque atque vero officia minus dignissimos consectetur maxime, tenetur reprehenderit ut sit?</p>
+                                            <h4><?php echo ucfirst($author);?></h4>
+                                            <p><?php echo $post_data;?></p>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="comment">
+                                
+                               <!--    comments-->
+                               <?php
+                                $c_query = "SELECT * FROM comments where status = 'approve' and post_id = $post_id ORDER BY id DESC";
+                                $c_run = mysqli_query($con,$c_query);
+                                if(mysqli_num_rows($c_run) > 0){
+                                 ?>
+                                <div class="comment w-100">
                                    <h3>Comments</h3><hr>
+                                   <?php
+                                    while($c_row = mysqli_fetch_array($c_run)){
+                                        $c_id = $c_row['id'];
+                                        $c_name = $c_row['name'];
+                                        $c_username = $c_row['username'];
+                                        $c_image = $c_row['image'];
+                                        $c_comment = $c_row['comment'];
+                                    ?>
                                     <div class="row single-comment">
                                         <div class="col-md-2">
-                                            <img src="img/unknown.png" alt="Profile Picture" class="rounded-circle">
+                                            <img src="img/<?php echo $c_image?>" alt="Profile Picture" class="rounded-circle">
                                         </div>
                                         <div class="col-md-10">
-                                            <h4>Sanu Kumar</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, sequi, aspernatur? Temporibus laborum dignissimos corporis neque, deserunt ipsam natus veritatis quaerat eius debitis. Ratione, optio perspiciatis consectetur debitis nostrum similique.</p>
+                                            <h4><?php echo ucfirst($c_name);?></h4>
+                                            <p><?php echo $c_comment?></p>
                                         </div>
-                                    </div>
-
-                                    <div class="row single-comment">
-                                        <div class="col-md-2">
-                                            <img src="img/unknown.png" alt="Profile Picture" class="rounded-circle">
-                                        </div>
-                                        <div class="col-md-10">
-                                            <h4>Sanu Kumar</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, sequi, aspernatur? Temporibus laborum dignissimos corporis neque, deserunt ipsam natus veritatis quaerat eius debitis. Ratione, optio perspiciatis consectetur debitis nostrum similique.</p>
-                                        </div>
-                                    </div>
-
+                                    </div><hr>
+                                    <?php }?>
+                                 
                                 </div>
+                                <?php }
+                                 
+                                 if(isset($_POST['submit'])){
+                                        $cs_name = $_POST['full-name'];
+                                        $cs_email = $_POST['email'];
+                                        $cs_website = $_POST['website'];
+                                        $cs_comment = $_POST['comment'];
+                                        $cs_date = time();
+                                        if(empty($cs_name) or empty($cs_email) or empty($cs_comment)){
+                                            
+                                            $error_msg = "All (*) feilds are Required";
+                                        }
+                                        else{
+                                            $cs_query = "INSERT INTO `comments` (`id`, `date`, `name`, `username`, `post_id`, `email`, `website`, `image`, `comment`, `status`) VALUES (NULL, '$cs_date', '$cs_name', '$c_username', '$post_id', '$cs_email', '$cs_website', 'unknown.png', '$cs_comment', 'pending')";
+                                            if(mysqli_query($con,$cs_query)){
+                                                $msg = "Comment Submitted and waiting for Approval";
+                                                $cs_name = " ";
+                                                $cs_email = " ";
+                                                $cs_website = " ";
+                                                $cs_comment = " ";
+                                            }
+                                            else{
+                                                $error_msg ="Comment not submitted";
+                                            }
+                                        }
+                                     
+                                 }
+                                 
+                                 ?>
                                  <div class="col-md-12 comment-box bg-white py-4 ">
-                                     <form action="">
+                                     <form action=""  method="post">
                                          <div class="form-group">
                                              <label for="full-name">Full Name:*</label>
-                                             <input type="text" id="full-name" class="form-control" placeholder="Full Name">
+                                             <input type="text" name="full-name" value="<?php if(isset($cs_name)){echo $cs_name;}?>" class="form-control" placeholder="Full Name" required>
                                          </div>
 
                                          <div class="form-group">
                                              <label for="email">Email:*</label>
-                                             <input type="text" id="email" class="form-control" placeholder="Email Address" required>
+                                             <input type="text" name="email" value="<?php if(isset($cs_email)){echo $cs_email;}?>" class="form-control" placeholder="Email Address" required>
                                          </div>
 
                                          <div class="form-group">
                                              <label for="website">Website:</label>
-                                             <input type="text" id="website" class="form-control" placeholder="Website">
+                                             <input type="text"  name="website" value="<?php if(isset($cs_website)){echo $cs_website;}?>" class="form-control" placeholder="Website">
                                          </div>
 
                                          <div class="form-group">
                                              <label for="message">Comment:*</label>
-                                             <textarea  id="message" cols="30" rows="10" class="form-control" placeholder="Your Message Should Be Here"></textarea>
+                                             <textarea  name="comment" cols="30" rows="10" class="form-control" placeholder="Your Message Should Be Here" required><?php if(isset($cs_comment)){echo $cs_comment;}?></textarea>
                                          </div>
 
                                          <input type="submit" name="submit" value="Submit Comment" class="btn btn-primary">
-
+                                           <?php
+                                            if(isset($error_msg)){
+                                                echo  "<span class='float-right text-danger'>$error_msg</span>";
+                                            }
+                                            else if(isset($msg)){
+                                                echo "<span class='float-right text-success'>$msg</span>";
+                                            }
+                                          ?>
                                      </form>
                                  </div>
                              </div>
@@ -157,16 +246,3 @@
      <!-- Footer -->
         <?php include 'includes/footer.php';?>
      <!-- Footer -->
-    
-
-    
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<!--
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js" integrity="sha384-7aThvCh9TypR7fIc2HV4O/nFMVCBwyIUKL8XCtKE+8xgCgl/PQGuFsvShjr74PBp" crossorigin="anonymous"></script>
--->
-  </body>
-</html>

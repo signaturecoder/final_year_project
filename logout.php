@@ -1,3 +1,5 @@
+<!--Logout for Google Signin-->
+
 <?php 
     session_start();
     session_unset();
