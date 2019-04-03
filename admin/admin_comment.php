@@ -163,15 +163,15 @@ if(isset($_POST['checkboxes'])){
                                    $comment = $row['comment'];
                                    $post_id = $row['post_id'];
                                    //$role = $row['role'];
-                                   $date = getdate($row['date']);
-                                   $day = $date['mday'];
-                                   $month = substr ($date['month'],0,3);
-                                   $year = $date['year'];
+                                   $date = $row['date'];
+                                   // $day = $date['mday'];
+                                   // $month = substr ($date['month'],0,3);
+                                   // $year = $date['year'];
                                 ?>
                                 <tr>
                                     <td><input type="checkbox" class="checkboxes" name="checkboxes[]" value="<?php echo $id;?>"></td>
                                     <td><?php echo $id;?></td>
-                                    <td><?php echo "$day $month $year";?></td>
+                                    <td><?php echo $date;?></td>
                                     <td><?php echo $username;?></td>
                                     <td><?php echo $comment;?></td>
                                     <td><?php echo ucfirst($status);?></td>

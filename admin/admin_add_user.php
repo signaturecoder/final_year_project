@@ -38,7 +38,7 @@ else if(isset($_SESSION['username']) && $_SESSION['role'] == 'author'){
 
             <?php
             if(isset($_POST['submit'])){
-              $date = time();
+              $date = date('Y-m-d');
               $first_name = mysqli_real_escape_string($con,$_POST['first-name']);
               $last_name = mysqli_real_escape_string($con,$_POST['last-name']);
 
@@ -82,7 +82,7 @@ else if(isset($_SESSION['username']) && $_SESSION['role'] == 'author'){
                 // . " username is " . $username . " email is ". $email . " image is ".
                 // $image . " password is ". $password . " role is " . $role;
 
-                $insert_query = "INSERT INTO `users_details` (`id`,`date`, `first_name`, `last_name`, `username`, `email`, `image`, `password`, `role`) VALUES (NULL, $date, '$first_name', '$last_name', '$username', '$email', '$image', '$password', '$role')";
+                $insert_query = "INSERT INTO `users_details` (`id`,`date`, `first_name`, `last_name`, `username`, `email`, `image`, `password`, `role`) VALUES (NULL, '$date', '$first_name', '$last_name', '$username', '$email', '$image', '$password', '$role')";
                 if(mysqli_query($con,$insert_query)){
                   $msg = "users_details has been added";
 //                                    move_uploaded_file($image_tmp, "img/$image");

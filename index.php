@@ -121,10 +121,11 @@
                             //  Do not need to write in proper order similar to database
                             // these are the php variables = php array['database column_name']
                             $id = $row['id'];
-                            $date = getdate($row['date']); //getdate is a funtion
-                            $day = $date['mday'];
-                            $month = $date['month'];
-                            $year = $date['year'];
+                            $date =$row['date'];
+                            $date1=date_parse($date); // associative array 
+                            $day = $date1['day'];
+                            $month = $date1['month'];
+                            $year = $date1['year'];
                             $title = $row['title'];
                             $author = $row['author'];
                             $author_image = $row['author_image'];
