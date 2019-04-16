@@ -11,7 +11,7 @@ if(!isset($_SESSION['username'])){
 <body>
 <!-- <div id="wrapper"> -->
   <?php require_once('includes/navbar.php');?>
-  <div id="wrapper">
+  
     <div class="cointainer-fluid body-section">
       <div class="row">
        <div class="col-md-3">           
@@ -21,20 +21,14 @@ if(!isset($_SESSION['username'])){
 
       <div class="col-md-9">
         <h1><i class="fa fa-database"></i>Media <small>Add Or View Media Files</small></h1><hr>
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Library</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Data</li>
-                  </ol>
-                </nav>
-
-          <?php 
+              
+         <?php 
           if(isset($_POST['submit'])){
             if(count($_FILES['media']['name']) > 0){
-              for($i = 0; $i<count($_FILES['media']['name']); $i++){
+              for($i = 0; $i < count($_FILES['media']['name']); $i++){
 
                 $image = $_FILES['media']['name'][$i];
+            
                 $tmp_name = $_FILES['media']['tmp_name'][$i];  
                 $query = "INSERT INTO media (image) VALUE ('$image')";
                 if(mysqli_query($con, $query)){
@@ -44,7 +38,8 @@ if(!isset($_SESSION['username'])){
             }
           }
 
-          ?>
+          ?> 
+
 
           <form action="" method="post" enctype="multipart/form-data">
             <div class="row">
@@ -57,19 +52,17 @@ if(!isset($_SESSION['username'])){
             </div>
           </form>
           <div class="row">
-           <?php 
+       <?php 
            $get_query = "SELECT * FROM media ORDER BY id DESC";
            $get_run = mysqli_query($con, $get_query);
            if(mysqli_num_rows($get_run) > 0){
             while($get_row = mysqli_fetch_array($get_run))  {
               $get_image = $get_row['image'];
-              echo "hi";
-
 
               ?>
               <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 thumb">
-                <a href="media/<?php echo $get_image;?>" class="thumbnail">
-                  <img src="media/<?php echo $get_image;?>" width="100%" alt="">
+                <a href="media/<?php echo $get_image;?>" class="thumbnail"><br>
+                  <img src="media/<?php echo $get_image;?>" width="100px" alt="">
                 </a>
               </div>
               <?php
@@ -78,10 +71,10 @@ if(!isset($_SESSION['username'])){
           else{
             echo "<center><h2>No Media Available</h2></center>";
           }
-          ?>
+          ?> 
 
         </div>
     </div>
-  </div>
+  
 </div>
 <?php require_once('includes/footer.php')?>

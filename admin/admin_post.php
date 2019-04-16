@@ -119,11 +119,11 @@ if(isset($_GET['del'])){
           </div>
           <?php 
           if(isset($error)){
-           echo "<span style='color:red;' class='pull-right'>$error</span>";
+           echo "<span style='color:red;' class='float-right'>$error</span>";
 
          }
          else if(isset($msg)){
-          echo "<span style='color:green;' class='pull-right'>$msg</span>";
+          echo "<span style='color:green;' class='float-right'>$msg</span>";
         }
         ?>
 
@@ -153,15 +153,15 @@ if(isset($_GET['del'])){
            $category= $row['category'];
            $image = $row['image'];
            $status = $row['status'];
-           $date = getdate($row['date']);
-           $day = $date['mday'];
-           $month = substr ($date['month'],0,3);
-           $year = $date['year'];
+           $date = $row['date'];
+           // $day = $date['mday'];
+           // $month = substr ($date['month'],0,3);
+           // $year = $date['year'];
            ?>
            <tr>
             <td><input type="checkbox" class="checkboxes" name="checkboxes[]" value="<?php echo $id;?>"></td>
             <td><?php echo $id;?></td>
-            <td><?php echo "$day $month $year";?></td>
+            <td><?php echo $date;?></td>
             <td><?php echo $title;?></td>
             <td><?php echo $author;?></td>
 
@@ -178,7 +178,7 @@ if(isset($_GET['del'])){
                   echo 'red';
                 }
             ?>"><?php echo ucfirst($status);?></span></td>         
-            <td><a href="edit-post.php?edit=<?php echo $id;?>">
+            <td><a href="admin_edit_post.php?edit=<?php echo $id;?>">
               <i class="fas fa-pencil-alt"></i></a></td>
               <td><a href="admin_post.php?del=<?php echo $id;?>"><i class="fa fa-times"></i></a></td>
             </tr>

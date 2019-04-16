@@ -173,8 +173,7 @@
                         }
                         ?>
                         <!--    Post ended here-->
-                    
-
+                        
                      <nav>
                       <ul class="pagination justify-content-center pagination-sm">
                        <?php 

@@ -12,12 +12,16 @@ if(isset($_POST['submit'])){
         $db_username = $row['username'];
         $db_password = $row['password'];
         $db_role = $row['role'];
+        $db_author_image = $row['image'];
+
         //$password from form and $db_password from our database
+      
         $password = crypt($password,$db_password);
         if($username == $db_username && $password == $db_password){
               header('location: index.php');
               $_SESSION['username'] = $db_username;
               $_SESSION['role'] = $db_role;
+              $_SESSION['author_image'] = $db_author_image;
         }
         else{
           $error = " Wrong Username and Password";
@@ -43,8 +47,8 @@ if(isset($_POST['submit'])){
    
 </head>
 <body>
-  <div id="wrapper">
-  	<div class="container mt-3">
+<!--  <div id="wrapper">-->
+    <div class="container mt-3">
         <div class="row justify-content-sm-center">
           <div class="col-sm-6 col-md-4">
 
@@ -70,7 +74,6 @@ if(isset($_POST['submit'])){
                     }
                     ?> 
                   </label>
-                  <a href="#" class="float-right">Need help?</a>
                 </form>
               </div>
             </div>

@@ -10,10 +10,10 @@ $row = mysqli_fetch_array($run);
 
 $image = $row['image'];
 $id = $row['id'];
-$date =getdate($row['date']);
-$day = $date['mday'];
-$month = substr($date['month'],0,3);
-$year = $date['year'];
+$date =$row['date'];
+// $day = $date['mday'];
+// $month = substr($date['month'],0,3);
+// $year = $date['year'];
 $first_name = $row['first_name'];
 $last_name = $row['last_name'];
 $username = $row['username'];
@@ -42,16 +42,16 @@ $details = $row['details'];
 
      <div class="col-md-9">
       <h1><i class="fa fa-user"></i> Profile <small>Personal Details</small></h1><hr>
-       <nav aria-label="breadcrumb">
+<!--        <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item"><a href="#">Library</a></li>
           <li class="breadcrumb-item active" aria-current="page">Data</li>
         </ol>
-      </nav>
+      </nav> -->
 
         <center><img src="img/<?php echo $image;?>" width="200px" class="img-circle img-thumbnail" id="profile-image"></center><br>
-        <a href="edit_profile.php?edit=<?php echo $id;?>" class="btn btn-primary float-right">edit profile</a>
+        <a href="admin_edit_profile.php?edit=<?php echo $id;?>" class="btn btn-primary float-right">edit profile</a>
         <center>
          <h3>Profile Details</h3>
        </center>
@@ -61,7 +61,7 @@ $details = $row['details'];
            <td width="20%"><b>user id:</b></td>
            <td width="30%"><?php echo $id;?></td>
            <td width="20%"><b>singup date:</b></td>
-           <td width="30%"><?php echo "$day $month $year";?></td>
+           <td width="30%"><?php echo $date;?></td>
          </tr>
 
          <tr>

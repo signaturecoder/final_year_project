@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 02, 2019 at 12:32 PM
+-- Generation Time: Apr 15, 2019 at 08:25 AM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -76,12 +76,12 @@ INSERT INTO `comments` (`id`, `date`, `name`, `username`, `post_id`, `email`, `w
 (3, '2019-03-31', 'Ramesh', 'ziddicoder', 4, 'snkmr13@gmail.com', 'gmail.com', 'unknown.png', 'This is a another demo comment.\r\n', 'pending'),
 (4, '2019-03-31', 'sanu', 'user', 4, 'dsf@gmail.com', 'bh', 'unknown.png', 'jkbk', 'approve'),
 (5, '2019-03-31', 'sanu', 'user', 4, 'dsf@gmail.com', 'bh', 'unknown.png', 'jkbk', 'pending'),
-(6, NULL, 'sanu', 'user', 4, 'dsf@gmail.com', 'bh', 'unknown.png', 'jkbk', 'pending'),
-(7, NULL, 'sanu', 'user', 4, 'dsf@gmail.com', 'bh', 'unknown.png', 'sw', 'pending'),
-(8, NULL, ' gdfg', 'user', 4, ' fdg', ' ', 'unknown.png', ' dgfg', 'pending'),
-(9, NULL, 'sanu', 'user', 4, 'snkmr13@gmail.com', 'ffug', 'unknown.png', 'gibgbyhuiniu', 'pending'),
-(10, NULL, ' sanu', 'user', 4, 'snkmr13@gmail.com', 'kafhs', 'unknown.png', 'my name is khan\r\n ', 'pending'),
-(11, NULL, ' sanu', 'user', 4, 'snkmr13@gmail.com', 'kafhs', 'unknown.png', 'my name is khan\r\n ', 'pending');
+(6, '2019-04-01', 'sanu', 'user', 4, 'dsf@gmail.com', 'bh', 'unknown.png', 'jkbk', 'pending'),
+(7, '2019-04-01', 'sanu', 'user', 4, 'dsf@gmail.com', 'bh', 'unknown.png', 'sw', 'pending'),
+(8, '2019-04-01', ' gdfg', 'user', 4, ' fdg', ' ', 'unknown.png', ' dgfg', 'pending'),
+(9, '2019-04-02', 'sanu', 'user', 4, 'snkmr13@gmail.com', 'ffug', 'unknown.png', 'gibgbyhuiniu', 'pending'),
+(10, '2019-04-02', ' sanu', 'user', 4, 'snkmr13@gmail.com', 'kafhs', 'unknown.png', 'my name is khan\r\n ', 'pending'),
+(11, '2019-04-02', ' sanu', 'user', 4, 'snkmr13@gmail.com', 'kafhs', 'unknown.png', 'my name is khan\r\n ', 'pending');
 
 -- --------------------------------------------------------
 
@@ -92,9 +92,23 @@ INSERT INTO `comments` (`id`, `date`, `name`, `username`, `post_id`, `email`, `w
 DROP TABLE IF EXISTS `media`;
 CREATE TABLE IF NOT EXISTS `media` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `media`
+--
+
+INSERT INTO `media` (`id`, `image`) VALUES
+(16, 'unknown.png'),
+(15, 'twitterlogo.png'),
+(14, 'twitterIcon.png'),
+(17, 'technoIndiaBuilding2.jpg'),
+(18, 'technoLogo - Copy.png'),
+(19, 'technoLogo.png'),
+(20, 'technoLogo1.png'),
+(21, 'technoLogo2.png');
 
 -- --------------------------------------------------------
 
@@ -181,13 +195,13 @@ CREATE TABLE IF NOT EXISTS `users_details` (
 --
 
 INSERT INTO `users_details` (`id`, `date`, `first_name`, `last_name`, `username`, `email`, `image`, `password`, `role`, `details`, `salt`) VALUES
-(5, NULL, 'sanchita', 'roy', 'roy', 'fdsf', 'technoLogoSmall.png', '$1$9XyaIMLr$dq..PHYy8KEbv6Def1t8X1', 'author', '', '$2y$10$quickbrownfoxjumpsover'),
-(6, NULL, 'sanu', 'kumar', 'signature', 'sanukmr333@gmail.com', 'technoLogoSmall.png', '$2y$10$quickbrownfoxjumpsoveeIWYZYq2qF9uzDPZ86fdKor7kzYijyti', 'admin', '', '$2y$10$quickbrownfoxjumpsover'),
-(9, NULL, 'sunny', 'Narayan', 'sunnyn', 'sunnykumar424@gmail.com', 'technoLogoSmall.png', '$2y$10$quickbrownfoxjumpsoveeBQvfaibOXKa5Z4P6ZhUnZKCmB6toBj6', 'admin', NULL, '$2y$10$quickbrownfoxjumpsover'),
-(11, NULL, 'shashi', 'kant', 'pathak', 'shashi@gmail.com', 'unknown.png', '$2y$10$quickbrownfoxjumpsovee.6eGmSmNsOUG35.tVMH/qM5vzgs76FG', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
-(12, NULL, 'ram', 'kumar', 'ramu', 'ram@gmail.com', 'unknown.png', '$2y$10$quickbrownfoxjumpsoveeggQx8s9En/S.kb17IoDT6kp47WDvxRe', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
-(13, NULL, 'shayam', 'kumar', 'shayma', 'shyam@gmail.com', 'unknown.png', '$2y$10$quickbrownfoxjumpsoveeprg1xz2aNOWxFwbHQ79BaBMdeYrnHXK', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
-(14, NULL, 'vivek', 'kumar', 'kushwaha', '123@gmail.com', 'passport_size_photo_2_.jpeg', '$2y$10$quickbrownfoxjumpsoveej72VuDqUreNbHwlMG529L8v5MjY7lWq', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
+(5, '2019-03-24', 'sanchita', 'roy', 'roy', 'fdsf', 'technoLogoSmall.png', '$1$9XyaIMLr$dq..PHYy8KEbv6Def1t8X1', 'author', '', '$2y$10$quickbrownfoxjumpsover'),
+(6, '2019-03-25', 'sanu', 'kumar', 'signature', 'sanukmr333@gmail.com', 'technoLogoSmall.png', '$2y$10$quickbrownfoxjumpsoveeIWYZYq2qF9uzDPZ86fdKor7kzYijyti', 'admin', '', '$2y$10$quickbrownfoxjumpsover'),
+(9, '2019-03-26', 'sunny', 'Narayan', 'sunnyn', 'sunnykumar424@gmail.com', 'technoLogoSmall.png', '$2y$10$quickbrownfoxjumpsoveeBQvfaibOXKa5Z4P6ZhUnZKCmB6toBj6', 'admin', NULL, '$2y$10$quickbrownfoxjumpsover'),
+(11, '2019-03-27', 'shashi', 'kant', 'pathak', 'shashi@gmail.com', 'unknown.png', '$2y$10$quickbrownfoxjumpsovee.6eGmSmNsOUG35.tVMH/qM5vzgs76FG', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
+(12, '2019-03-28', 'ram', 'kumar', 'ramu', 'ram@gmail.com', 'unknown.png', '$2y$10$quickbrownfoxjumpsoveeggQx8s9En/S.kb17IoDT6kp47WDvxRe', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
+(13, '2019-03-29', 'shayam', 'kumar', 'shayma', 'shyam@gmail.com', 'unknown.png', '$2y$10$quickbrownfoxjumpsoveeprg1xz2aNOWxFwbHQ79BaBMdeYrnHXK', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
+(14, '2019-03-30', 'vivek', 'kumar', 'kushwaha', '123@gmail.com', 'passport_size_photo_2_.jpeg', '$2y$10$quickbrownfoxjumpsoveej72VuDqUreNbHwlMG529L8v5MjY7lWq', 'author', NULL, '$2y$10$quickbrownfoxjumpsover'),
 (16, '2019-03-31', 'sumeet', 'kumar', 'summet', 'sumit@gmail.com', 'passport_size_photo_2_.jpeg', '$2y$10$quickbrownfoxjumpsoveenTYUuH2MSYrEZdF7FN/IwN6EPrIwuou', 'author', NULL, '$2y$10$quickbrownfoxjumpsover');
 COMMIT;
 

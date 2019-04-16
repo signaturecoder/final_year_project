@@ -12,10 +12,11 @@ if(isset($_GET['edit'])){
     $edit_query_run = mysqli_query($con,$edit_query);
     if(mysqli_num_rows($edit_query_run) > 0){
         $edit_row = mysqli_fetch_array($edit_query_run);
-        $e_first_name = $edit_row['first-name'];
-        $e_last_name = $edit_row['last-name'];
+        $e_first_name = $edit_row['first_name'];
+        $e_last_name = $edit_row['last_name'];
         $e_role = $edit_row['role'];
         $e_image = $edit_row['image'];
+        $e_details = $edit_row['details'];
     }
     else{
         header('location: index.php');
@@ -45,12 +46,8 @@ else{
             
             
             <div class="col-md-9">
-                <h1><i class="fa fa-user"></i> Edit User <small>Edit User details</small></h1><hr>
-                <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                    <li class="active"><i class="fa fa-user ml-2"></i>Edit User</li>
-                </ol>
+                <h1><i class="fa fa-user"></i> Edit User <small>Edit User Details</small></h1><hr>
+
                    
                    <?php
                         if(isset($_POST['submit'])){
@@ -60,22 +57,54 @@ else{
                             $role = $_POST['role'];
                             $image = $_FILES['image']['name']; 
                             $image_tmp = $_FILES['image']['tmp_name']; 
-
+                            $details = mysqli_real_escape_string($con,$_POST['details']);
+                            
+                            if(empty($image)){
+                                $image = $e_image;
+                            }
+                            
+                              
                             $salt_query = "SELECT * FROM users_details ORDER BY id DESC LIMIT 1";
                             $salt_run = mysqli_query($con, $salt_query);
                             $salt_row = mysqli_fetch_array($salt_run);
                             $salt = $salt_row['salt'];
-                            $password = crypt($password, $salt);
+                            $insert_password = crypt($password, $salt);
                            
                             if(empty($first_name) or empty($last_name) or empty($image)){
                                 $error = "All (*) feilds are required";
                                 
                             }
-                            
+                         
                             else{
-                                $msg = "All Fine";
+                //                 echo  " first name is " . $first_name . " last name is " . $last_name
+                // .  " image is ".
+                //  $image ." image_tmp is ".
+                //  $image_tmp . " password is ". $password ."encrypt password is ". $insert_password . " role is " . $role. " id " . $edit_id;
+                                $update_query = "UPDATE `users_details` SET `first_name` = '$first_name', `last_name` = '$last_name', `image` = '$image',`role` = '$role', `details` = '$details'";
+                                
+                                if(isset($password)){
+                                    $update_query .= ", password = '$insert_password'";
+                                    
+                                }
+                                 
+                                  $update_query .= " WHERE `users_details`.`id` = $edit_id";
+                                if(mysqli_query($con, $update_query)){
+                                    $msg = "user has been updated";
+                                    header("refresh:1;url=admin_edit_user.php?edit=$edit_id");
+
+                                if(!empty($image)){
+                                    move_uploaded_file($image_tmp, "img/$image");
+                                }
+
+                                }
+                                else{
+                                     $error = "user has not been updated";
+                                    
+
+                                }
                             }
                         }  
+
                     ?>
                     
                     <div class="row">
@@ -87,32 +116,22 @@ else{
                                  
                                  <?php 
                                        if(isset($error)){
-                                           echo "<span class='pull-right' style='color:red;'>$error</span>";
+                                           echo "<span class='float-right' style='color:red;'>$error</span>";
                                        }
                                        else if(isset($msg)){
-                                           echo "<span class='pull-right' style='color:green;'>$msg</span>";
+                                           echo "<span class='float-right' style='color:green;'>$msg</span>";
                                        }
                                  ?>
                                  
                                  
-                                 <input type="text" id="first-name" name="first-name" class="form-control" placeholder="First Name">
+                                 <input type="text" id="first-name" name="first-name" class="form-control" value="<?php echo $e_first_name;?>" placeholder="First Name">
                              </div>
                              
                              <div class="form-group">
                                  <label for="last-name">Last Name:*</label>
-                                 <input type="text" id="last-name" name="last-name" class="form-control" placeholder="Last Name">
+                                 <input type="text" id="last-name" name="last-name" class="form-control" value="<?php echo $e_last_name;?>" placeholder="Last Name">
                              </div>
-                            
-                            <div class="form-group">
-                                 <label for="username">Username:*</label>
-                                 <input type="text" id="username" name="username" class="form-control" placeholder="username">
-                             </div>
-                            
-                            <div class="form-group">
-                                 <label for="email">Email:*</label>
-                                 <input type="text" id="email" name="email" class="form-control" placeholder="email">
-                             </div>
-                            
+
                             <div class="form-group">
                                  <label for="first-name">Password:*</label>
                                  <input type="password" id="password" name="password" class="form-control" placeholder="password">
@@ -121,8 +140,8 @@ else{
                             <div class="form-group">
                                  <label for="role">Role:*</label>
                                  <select name="role" id="role" class="form-control">
-                                 <option value="author">Author</option>
-                                 <option value="admin">Admin</option>
+                                 <option value="author" <?php if($e_role == 'author'){echo "selected";}?>>Author</option>
+                                 <option value="admin" <?php if($e_role == 'admin'){echo "selected";}?>>Admin</option>
                                  </select>
                              </div>
                             
@@ -131,15 +150,24 @@ else{
                                  <input type="file" id="image" name="image" class="form-control">
                              </div>
                             
+                            <div class="form-group">
+                                 <label for="details">Details:*</label>
+                                 <textarea name="details" id="details" cols="30" rows="10" class="form-control"><?php echo $e_details;?></textarea>
+                                 
+                             </div>
+                             
                             <input type="submit" value="Update User" name="submit" class="btn btn-primary">
                          </form>
-                      
+                        <br>
                         </div>
                         <div class="col-md-4">
-                            
+                           <?php 
+                             echo "<img src='img/$e_image' width='100px'>";
+                            ?>
+                           
                         </div>
                     </div>
-                    </nav> 
+                   
                     </div>
                 </div>
             </div>

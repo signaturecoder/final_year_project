@@ -2,11 +2,34 @@
 if(!isset($_SESSION['username'])){
     header('location: admin_login.php');
 }
-else if(isset($_SESSION['username']) && $_SESSION['role'] == 'author'){
+
+$session_username = $_SESSION['username'];
+
+if(isset($_GET['edit'])){
+    $edit_id = $_GET['edit'];
+    $edit_query = "SELECT * FROM users_details WHERE id = $edit_id";
+    $edit_query_run = mysqli_query($con,$edit_query);
+    if(mysqli_num_rows($edit_query_run) > 0){
+        $edit_row = mysqli_fetch_array($edit_query_run);
+        $e_username = $edit_row['username'];
+        //restricted other user to change the profile of one another
+        if($e_username == $session_username) {
+            $e_first_name = $edit_row['first_name'];
+            $e_last_name = $edit_row['last_name'];
+            $e_image = $edit_row['image'];
+            $e_details = $edit_row['details'];
+        }
+      
+    }
+    else{
+        header('location: index.php');
+    }
+}
+else{
     header('location: index.php');
 }
 ?>
-  
+    
 </head>
 <body>
 <!--     <div id="wrapper"> -->
@@ -26,47 +49,64 @@ else if(isset($_SESSION['username']) && $_SESSION['role'] == 'author'){
             
             
             <div class="col-md-9">
-                <h1><i class="fa fa-user"></i> Edit User <small>Edit User details</small></h1><hr>
-                <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                    <li class="active"><i class="fa fa-user ml-2"></i>Edit User</li>
-                </ol>
-                   
+                <h1><i class="fa fa-user"></i> Edit Profile <small>Edit Profile Details</small></h1><hr>
+
                    <?php
                         if(isset($_POST['submit'])){
                             $first_name = mysqli_real_escape_string($con,$_POST['first-name']);
                             $last_name = mysqli_real_escape_string($con,$_POST['last-name']);
-                            
-                            $username = mysqli_real_escape_string($con,$_POST['username']);
-                            $username_trim = preg_replace('/\s+/','',$username);
-                            
-                            $email = mysqli_real_escape_string($con,$_POST['email']);
                             $password = mysqli_real_escape_string($con,$_POST['password']);
-                            $role = $_POST['role'];
+
                             $image = $_FILES['image']['name']; 
                             $image_tmp = $_FILES['image']['tmp_name']; 
+                            $details = mysqli_real_escape_string($con,$_POST['details']);
                             
-                            $check_query = "SELECT * FROM users_details WHERE username = '$username' or email ='$email'";
-                            $check_run = mysqli_query($con, $check_query);
+                            if(empty($image)){
+                                $image = $e_image;
+                            }
                             
-                            if(empty($first_name) or empty($last_name) or empty($username) or empty($email) or empty($password) or empty($image)){
+                              
+                            $salt_query = "SELECT * FROM users_details ORDER BY id DESC LIMIT 1";
+                            $salt_run = mysqli_query($con, $salt_query);
+                            $salt_row = mysqli_fetch_array($salt_run);
+                            $salt = $salt_row['salt'];
+                            $insert_password = crypt($password, $salt);
+                           
+                            if(empty($first_name) or empty($last_name) or empty($image)){
                                 $error = "All (*) feilds are required";
                                 
                             }
-                            
-                            else if($username != $username_trim){
-                                $error = "Don't use spaces in Username";
-                                
-                            }
-                            else if(mysqli_num_rows($check_run) > 0){
-                                $error = "Username or Emails are Already Exist";
-                                
-                            }
+                         
                             else{
-                                $msg = "All Fine";
+                //                 echo  " first name is " . $first_name . " last name is " . $last_name
+                // .  " image is ".
+                //  $image ." image_tmp is ".
+                //  $image_tmp . " password is ". $password ."encrypt password is ". $insert_password . " role is " . $role. " id " . $edit_id;
+                                $update_query = "UPDATE `users_details` SET `first_name` = '$first_name', `last_name` = '$last_name', `image` = '$image', `details` = '$details'";
+                                
+                                if(isset($password)){
+                                    $update_query .= ", password = '$insert_password'";
+                                    
+                                }
+                                 
+                                  $update_query .= " WHERE `users_details`.`id` = $edit_id";
+                                if(mysqli_query($con, $update_query)){
+                                    $msg = "user has been updated";
+                                    header("refresh:1;url=admin_edit_profile.php?edit=$edit_id");
+
+                                if(!empty($image)){
+                                    move_uploaded_file($image_tmp, "img/$image");
+                                }
+
+                                }
+                                else{
+                                     $error = "user has not been updated";
+                                    
+
+                                }
                             }
                         }  
+
                     ?>
                     
                     <div class="row">
@@ -78,59 +118,49 @@ else if(isset($_SESSION['username']) && $_SESSION['role'] == 'author'){
                                  
                                  <?php 
                                        if(isset($error)){
-                                           echo "<span class='pull-right' style='color:red;'>$error</span>";
+                                           echo "<span class='float-right' style='color:red;'>$error</span>";
                                        }
                                        else if(isset($msg)){
-                                           echo "<span class='pull-right' style='color:green;'>$msg</span>";
+                                           echo "<span class='float-right' style='color:green;'>$msg</span>";
                                        }
                                  ?>
                                  
                                  
-                                 <input type="text" id="first-name" name="first-name" class="form-control" placeholder="First Name">
+                                 <input type="text" id="first-name" name="first-name" class="form-control" value="<?php echo $e_first_name;?>" placeholder="First Name">
                              </div>
                              
                              <div class="form-group">
                                  <label for="last-name">Last Name:*</label>
-                                 <input type="text" id="last-name" name="last-name" class="form-control" placeholder="Last Name">
+                                 <input type="text" id="last-name" name="last-name" class="form-control" value="<?php echo $e_last_name;?>" placeholder="Last Name">
                              </div>
-                            
-                            <div class="form-group">
-                                 <label for="username">Username:*</label>
-                                 <input type="text" id="username" name="username" class="form-control" placeholder="username">
-                             </div>
-                            
-                            <div class="form-group">
-                                 <label for="email">Email:*</label>
-                                 <input type="text" id="email" name="email" class="form-control" placeholder="email">
-                             </div>
-                            
+              
                             <div class="form-group">
                                  <label for="first-name">Password:*</label>
                                  <input type="password" id="password" name="password" class="form-control" placeholder="password">
                              </div>
-                            
-                            <div class="form-group">
-                                 <label for="role">Role:*</label>
-                                 <select name="role" id="role" class="form-control">
-                                 <option value="author">Author</option>
-                                 <option value="admin">Admin</option>
-                                 </select>
-                             </div>
-                            
+             
                             <div class="form-group">
                                  <label for="image">Profile picture:*</label>
                                  <input type="file" id="image" name="image" class="form-control">
                              </div>
                             
-                            <input type="submit" value="Add User" name="submit" class="btn btn-primary">
+                            <div class="form-group">
+                                 <label for="details">Details:*</label>
+                                 <textarea name="details" id="details" cols="30" rows="10" class="form-control"><?php echo $e_details;?></textarea>
+                                 
+                             </div>
+                             
+                            <input type="submit" value="Update User" name="submit" class="btn btn-primary">
                          </form>
-                      
+                        <br>
                         </div>
                         <div class="col-md-4">
-                            
+                           <?php 
+                             echo "<img src='img/$e_image' width='100px'>";
+                            ?>
+                           
                         </div>
                     </div>
-                    </nav> 
                     </div>
                 </div>
             </div>

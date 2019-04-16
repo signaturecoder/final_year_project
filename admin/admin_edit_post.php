@@ -1,4 +1,3 @@
-
 <?php require_once('includes/header.php');
 //if no username in our database and session
 if(!isset($_SESSION['username'])){
@@ -6,8 +5,37 @@ if(!isset($_SESSION['username'])){
 }
 
 $session_username = $_SESSION['username'];
+$session_role = $_SESSION['role'];
 $session_author_image = $_SESSION['author_image'];
-// echo $session_author_image;
+
+if(isset($_GET['edit'])){
+    $edit_id = $_GET['edit'];
+    if($session_role == 'admin'){
+            $get_query = "SELECT * FROM posts WHERE id = $edit_id";
+            $get_run = mysqli_query($con, $get_query);
+    }
+    else if($session_role == 'author'){
+        $get_query = "SELECT * FROM posts WHERE id = $edit_id and author = '$session_role'";
+        $get_run = mysqli_query($con, $get_query);
+        
+    }
+    
+    if(mysqli_num_rows($get_run) > 0){
+        $get_row = mysqli_fetch_array($get_run);
+         $title = $get_row['title'];
+         $post_data = $get_row['post_data'];
+         $tags = $get_row['tags'];
+         $image = $get_row['image'];
+         $status = $get_row['status'];
+         $category = $get_row['category'];
+        
+        
+        
+    }
+    else{
+        header('location: admin_post.php');
+    }
+}
 
 ?>
 <!--<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>-->
@@ -28,41 +56,46 @@ $session_author_image = $_SESSION['author_image'];
         
         
         <div class="col-md-9">
-          <h1><i class="fas fa-plus-square"></i>Add Posts<small>Add New Post</small></h1><hr>
+          <h1><i class="fa fa-pencil"></i>Edit Post <small> Edit Post Details</small></h1><hr>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li><a href="index.php"><i class="fas fa-tachometer-alt mr-1"></i>Dashboard</a></li>
-              <li class="breadcrumb-item active"><i class="fa fa plus-square"></i>Add Post</li>
+              <li class="breadcrumb-item active"><i class="fa fa-pencil"></i>Edit Post</li>
             </ol>
-            <?php 
-              if(isset($_POST['submit'])){
-                  $date = date('Y-m-d');
-                  $title = mysqli_real_escape_string($con,$_POST['title']);
-                  $post_data =  mysqli_real_escape_string($con,$_POST['post_data']);
-                 
-                  $category = $_POST['category'];
-                  $tags =  mysqli_real_escape_string($con,$_POST['tags']);
-                  $status = $_POST['status'];
-                  $image = $_FILES['image']['name'];
-                  $tmp_name = $_FILES['image']['tmp_name'];
+            <?php  
+              if(isset($_POST['update'])){
                   
-                  if(empty($title) or empty($post_data) or empty($tags) or empty($image)){
+                   $up_title = mysqli_real_escape_string($con,$_POST['title']);
+                   $up_post_data = mysqli_real_escape_string($con,$_POST['post_data']);
+              
+                  $up_category = $_POST['category'];
+                  $up_tags =  mysqli_real_escape_string($con,$_POST['tags']);
+                  $up_status = $_POST['status'];
+                  $up_image = $_FILES['image']['name'];
+                  $up_tmp_name = $_FILES['image']['tmp_name'];
+                  
+                 if(empty($up_image)){
+                     $up_image = $image;
+                 }
+                  
+                  if(empty($up_title) or empty($up_post_data) or empty($up_tags) or empty($up_image)){
                       $error = "All (*) feilds Are Required";
                   }
                   else{
-                      // $insert_query = "INSERT INTO posts (date,title, author, author_image, image, category, tags, post_data, view, status) VALUES ('$date',$title','$session_username','$session_author_image','$image','$category','$tags','$post_data',0,'$status')";
-
-                      $insert_query = "INSERT INTO `posts` (`id`, `date`, `title`, `author`, `author_image`, `image`, `category`, `tags`, `post_data`, `view`, `status`) VALUES (NULL, '$date', '$title', '$session_username', '$session_author_image', '$image', '$category', '$tags', '$post_data', 0, '$status')";
+                      $update_query = "UPDATE posts SET title ='$up_title',image = '$up_image', category = '$up_category', tags = '$up_tags', post_data ='$up_post_data', status = '$up_status' WHERE id = $edit_id";
                       
-                      if(mysqli_query($con, $insert_query)){
-                          $msg = "Post Has Been Added";
-                         $path = "img/image";
-                         if(move_uploaded_file($tmp_name, $path)){
-                             copy($path, "../$path");
-                         }
+                      if(mysqli_query($con, $update_query)){
+                          $msg = "Post Has Been Updated";
+                          $path = "img/$up_image";
+                          header("location: admin_edit_post.php?edit=$edit_id");
+                          if(!empty($up_image)){
+                              if(move_uploaded_file($up_tmp_name, $path)){
+                              copy($path, "../$path");
+                          }
+                          }
                       }
                       else{
-                          $error = "Post Has Not Been Added";
+                          $error = "Post Has Not Been Updated";
                       }
                   }
                   
@@ -94,7 +127,7 @@ $session_author_image = $_SESSION['author_image'];
                 <div class="form-group">
 <!--
                    <textarea id="classic">
-                   <?php if(isset($title)){echo $title;}?>
+                   <?php if(isset($post_data)){echo $post_data;}?>
 
 
   
@@ -158,7 +191,7 @@ $session_author_image = $_SESSION['author_image'];
                            </div>
                        </div>
                        
-                       <input type="submit" class="btn btn-primary" value="Add Post" name="submit">
+                       <input type="submit" class="btn btn-primary" value="update Post" name="update">
                
            </form>
        </div>    

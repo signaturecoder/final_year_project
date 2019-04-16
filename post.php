@@ -14,9 +14,9 @@
             $row=array();
             $image='';
             $id='';
-            $day = '';
-            $month = '';
-            $year = '';
+            $date = '';
+            // $month = '';
+            // $year = '';
             $title ='';
             $image = '';
             $author_image = '';
@@ -32,10 +32,10 @@
             
             $row = mysqli_fetch_array($run);
             $id = $row['id'];
-            $date = getdate($row['date']);
-            $day = $date['mday'];
-            $month = $date['month'];
-            $year = $date['year'];
+            $date =$row['date'];
+            // $day = $date['mday'];
+            // $month = $date['month'];
+            // $year = $date['year'];
             $title = $row['title'];
             $image = $row['image'];
             $author_image = $row['author_image'];
@@ -73,9 +73,8 @@
                              <div class="post">
                                     <div class="row">
                                         <div class="col-md-2 post-date">
-                                            <div class="day"><?php echo $day;?></div>
-                                            <div class="month"><?php echo $month;?></div>
-                                            <div class="year"><?php echo $year;?></div>
+                                            <div class="day"><?php echo $date;?></div>
+                                            
                                         </div>
                                         <div class="col-md-8 post-title">
                                             <a href="post.php?post_id=<?php echo $id;?>"><h2><?php echo $title;?></h2></a>
@@ -135,7 +134,17 @@
                                         </div>
                                         <div class="col-md-9">
                                             <h4><?php echo ucfirst($author);?></h4>
-                                            <p><?php echo $post_data;?></p>
+                                            <?php
+                                            $bio_query = "SELECT * FROM users_details WHERE username = '$author'";
+                                            $bio_run = mysqli_query($con, $bio_query);
+                                            if(mysqli_num_rows($bio_run) > 0){
+                                                echo "running";
+                                                $bio_row = mysqli_fetch_array($bio_run);
+                                                $author_details = $bio_row['details'];
+
+                                            ?>
+                                            <p><?php echo $author_details;?></p>
+                                            <?php }?>
                                         </div>
                                     </div>
                                 </div>

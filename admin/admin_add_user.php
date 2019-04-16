@@ -158,7 +158,11 @@ else if(isset($_SESSION['username']) && $_SESSION['role'] == 'author'){
 
              </div>
              <div class="col-md-4">
-
+                   <?php 
+                          $image='';
+                          
+                            echo "<img src='img/$image' width='100px'>";
+                    ?>
              </div>
            </div>
          </div>

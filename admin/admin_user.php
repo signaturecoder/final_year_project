@@ -80,7 +80,7 @@ if(isset($_POST['checkboxes'])){
                   <div class="row">
                     <div class="col-xs-4">
                       <div class="form-group ml-3">
-                        <select name="bulk-options" id="selectallboxes" class="form-control">
+                        <select name="bulk-options" class="form-control">
                           <option value="delete">Delete</option>
                           <option value="author">Change To Author</option>
                           <option value="admin">Change To Admin</option>
@@ -139,8 +139,7 @@ if(isset($_POST['checkboxes'])){
                   <td><input type="checkbox" class="checkboxes" name="checkboxes[]" value="<?php echo $id;?>"></td>
                   <td><?php echo $id;?></td>
                   <td><?php echo $date;?></td>
-                  <td><?php echo $first_name;?></td>
-                  <td><?php echo $last_name;?></td>
+                  <td><?php echo "$first_name $last_name";?></td>
                   <td><?php echo $username;?></td>
                   <td><?php echo $email;?></td>
                   <td><img src="img/<?php echo $image;?>" width="50px"> 
